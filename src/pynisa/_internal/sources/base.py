@@ -23,7 +23,12 @@ class NisaSource(ABC):
     @property
     @abstractmethod
     def name(self) -> str:
-        """Human-readable source name (e.g. 'rakuten')."""
+        """Source identifier (e.g. 'rakuten')."""
+
+    @property
+    @abstractmethod
+    def display_name(self) -> str:
+        """Human-readable source name (e.g. '楽天', 'SBI')."""
 
     @abstractmethod
     def categories(self) -> list[str]:

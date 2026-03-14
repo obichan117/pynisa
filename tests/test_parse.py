@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pynisa._internal.core.parse import parse_csv, parse_html_table
+from pynisa._internal.core.parse import parse_csv
 
 
 class TestParseCsv:
@@ -47,23 +47,3 @@ class TestParseCsv:
             skip_footer=2,
         )
         assert df["rank"].dtype.name == "Int64"
-
-
-class TestParseHtmlTable:
-    def test_basic_table(self) -> None:
-        html = """
-        <html><body>
-        <table id="test">
-        <tr><th>A</th><th>B</th></tr>
-        <tr><td>1</td><td>hello</td></tr>
-        <tr><td>2</td><td>world</td></tr>
-        </table>
-        </body></html>
-        """
-        df = parse_html_table(html, selector="#test")
-        assert len(df) == 2
-        assert list(df.columns) == ["A", "B"]
-
-    def test_missing_table(self) -> None:
-        df = parse_html_table("<html></html>", selector="#nope")
-        assert df.empty

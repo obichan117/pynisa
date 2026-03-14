@@ -49,7 +49,9 @@ class TestRankingCommand:
     def test_count_option(self) -> None:
         with patch("pynisa.ranking", return_value=_mock_result()) as mock:
             runner.invoke(app, ["rakuten", "-n", "5"])
-            mock.assert_called_once_with("rakuten", None, count=5)
+            mock.assert_called_once_with(
+                "rakuten", None, count=5, date=None, live=False
+            )
 
     def test_period_shown(self) -> None:
         with patch("pynisa.ranking", return_value=_mock_result()):
@@ -62,8 +64,8 @@ class TestDefaultCommand:
         with patch("pynisa.ranking", return_value=_mock_result()):
             result = runner.invoke(app, [])
         assert result.exit_code == 0
-        assert "Rakuten" in result.output
-        assert "Sbi" in result.output
+        assert "楽天" in result.output
+        assert "SBI" in result.output
 
 
 class TestSourcesCommand:

@@ -1,3 +1,4 @@
+display_name: "楽天"
 base_url: "https://www.rakuten-sec.co.jp/web/market/ranking/nisa/"
 
 categories:

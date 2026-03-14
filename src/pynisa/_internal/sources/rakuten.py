@@ -26,6 +26,10 @@ class RakutenSource(NisaSource):
     def name(self) -> str:
         return "rakuten"
 
+    @property
+    def display_name(self) -> str:
+        return self._config["display_name"]
+
     def categories(self) -> list[str]:
         return list(self._config["categories"])
 
@@ -72,7 +76,7 @@ def _parse_ranking(
     period = ""
     updated = ""
     if len(lines) >= 2:
-        meta_lines = [l.split(",")[0].strip() for l in lines[-2:]]
+        meta_lines = [line.split(",")[0].strip() for line in lines[-2:]]
         for line in meta_lines:
             if "～" in line or "〜" in line:
                 period = line

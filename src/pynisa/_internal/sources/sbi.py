@@ -28,6 +28,10 @@ class SbiSource(NisaSource):
     def name(self) -> str:
         return "sbi"
 
+    @property
+    def display_name(self) -> str:
+        return self._config["display_name"]
+
     def categories(self) -> list[str]:
         return list(self._config["categories"])
 

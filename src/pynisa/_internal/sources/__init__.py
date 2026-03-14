@@ -27,6 +27,13 @@ def list_sources() -> list[str]:
     return sorted(_SOURCES)
 
 
+def get_display_name(name: str) -> str:
+    """Return human-readable display name for a source."""
+    if name not in _SOURCES:
+        return name
+    return _SOURCES[name]().display_name
+
+
 def sources_for_asset(asset_type: str) -> list[tuple[str, str]]:
     """Return list of (source_name, category) that support a given asset type."""
     results = []
@@ -40,8 +47,8 @@ def sources_for_asset(asset_type: str) -> list[tuple[str, str]]:
 
 def _auto_register() -> None:
     """Import all source modules to trigger registration."""
-    from pynisa._internal.sources import rakuten as _  # noqa: F401
-    from pynisa._internal.sources import sbi as _  # noqa: F401
+    from pynisa._internal.sources import rakuten as _rakuten  # noqa: F401
+    from pynisa._internal.sources import sbi as _sbi  # noqa: F401
 
 
 _auto_register()
