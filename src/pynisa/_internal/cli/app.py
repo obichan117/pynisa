@@ -5,19 +5,22 @@ from __future__ import annotations
 from typing import Optional
 
 import typer
-from rich.console import Console
 from rich.table import Table
 
 import pynisa
+from pynisa._internal.cli.formatting import (
+    build_table,
+    console,
+    format_change,
+    print_grid,
+)
 from pynisa._internal.sources import get_display_name, sources_for_asset
-from pynisa._internal.sources.base import RankingResult
 
 app = typer.Typer(
     name="nisa",
     help="Fetch NISA account trading rankings from Japanese brokerages.",
     invoke_without_command=True,
 )
-console = Console()
 
 # --- Asset type subcommands (nisa us, nisa cn, etc.) ---
 
@@ -120,12 +123,12 @@ def _show_all_sources_default(*, live: bool = False) -> None:
         try:
             result = pynisa.ranking(source_name, live=live)
             tables.append(
-                _build_table(result, source=source_name, category=None)
+                build_table(result, source=source_name, category=None)
             )
         except Exception as e:
             console.print(f"[red]{source_name}: {e}[/red]")
     if tables:
-        _print_grid(tables)
+        print_grid(tables)
 
 
 # --- Per-source commands (nisa rakuten, nisa sbi) ---
@@ -255,14 +258,7 @@ def history_cmd(
         table.add_column("category", style="dim")
 
     for _, row in result.data.iterrows():
-        change_val = str(row.get("change", ""))
-        if change_val in ("↑", "NEW", "New!"):
-            change_val = f"[green]{change_val}[/green]"
-        elif change_val == "↓":
-            change_val = f"[red]{change_val}[/red]"
-        elif change_val == "→":
-            change_val = f"[dim]{change_val}[/dim]"
-
+        change_val = format_change(str(row.get("change", "")))
         row_vals = [
             str(row["date"]),
             str(row["rank"]) if pd.notna(row["rank"]) else "",
@@ -341,7 +337,7 @@ def _fetch_and_print(
             )
         )
     else:
-        _print_table(result, source=source, category=category)
+        console.print(build_table(result, source=source, category=category))
 
 
 def _print_last_n(
@@ -352,10 +348,7 @@ def _print_last_n(
     last: int = 4,
     format: str = "table",
 ) -> None:
-    """Print the last N weeks of rankings, latest first.
-
-    Displays tables side-by-side in pairs (2 per row).
-    """
+    """Print the last N weeks of rankings, latest first."""
     from pynisa._internal.sources import get_source
 
     src = get_source(source)
@@ -369,24 +362,8 @@ def _print_last_n(
         return
 
     dates_to_show = available[:last]
-    tables: list[Table] = []
-
-    for d in dates_to_show:
-        try:
-            result = pynisa.ranking(
-                source, category, count=count, date=d
-            )
-            tables.append(
-                _build_table(result, source=source, category=category)
-            )
-        except Exception as e:
-            console.print(f"[red]{source} ({d}): {e}[/red]")
-
-    if not tables:
-        return
 
     if format != "table":
-        # For csv/json, just print sequentially
         for d in dates_to_show:
             try:
                 result = pynisa.ranking(
@@ -404,6 +381,21 @@ def _print_last_n(
                     )
             except Exception:
                 pass
+        return
+
+    tables: list[Table] = []
+    for d in dates_to_show:
+        try:
+            result = pynisa.ranking(
+                source, category, count=count, date=d
+            )
+            tables.append(
+                build_table(result, source=source, category=category)
+            )
+        except Exception as e:
+            console.print(f"[red]{source} ({d}): {e}[/red]")
+
+    if not tables:
         return
 
     # Print in pairs (2 per row)
@@ -433,70 +425,12 @@ def _print_side_by_side(
                 src_name, cat, count=count, date=date, live=live
             )
             tables.append(
-                _build_table(result, source=src_name, category=None)
+                build_table(result, source=src_name, category=None)
             )
         except Exception as e:
             console.print(f"[red]{src_name}: {e}[/red]")
     if tables:
-        _print_grid(tables)
-
-
-def _print_grid(tables: list[Table]) -> None:
-    """Render tables side-by-side in a grid."""
-    grid = Table.grid(padding=(0, 3))
-    for _ in tables:
-        grid.add_column()
-    grid.add_row(*tables)
-    console.print(grid)
-
-
-def _build_table(
-    result: RankingResult, *, source: str, category: str | None
-) -> Table:
-    """Build a rich Table from a RankingResult."""
-    import pandas as pd
-
-    df = result.data
-    period = result.period or result.updated or ""
-    display = get_display_name(source)
-    title = f"{display} ({period})" if period else display
-    if category:
-        title += f" — {category}"
-
-    table = Table(title=title, show_lines=False)
-
-    hidden = {
-        "source", "detail_url", "category",
-        "sector", "market", "date",
-    }
-    display_cols = [c for c in df.columns if c not in hidden]
-
-    for col in display_cols:
-        justify = "right" if col == "rank" else "left"
-        table.add_column(col, justify=justify)
-
-    for _, row in df.iterrows():
-        values: list[str] = []
-        for col in display_cols:
-            val = str(row[col]) if pd.notna(row[col]) else ""
-            if col == "change":
-                if val in ("↑", "NEW", "New!"):
-                    val = f"[green]{val}[/green]"
-                elif val == "↓":
-                    val = f"[red]{val}[/red]"
-                elif val == "→":
-                    val = f"[dim]{val}[/dim]"
-            values.append(val)
-        table.add_row(*values)
-
-    return table
-
-
-def _print_table(
-    result: RankingResult, *, source: str, category: str | None
-) -> None:
-    """Render RankingResult as a rich table."""
-    console.print(_build_table(result, source=source, category=category))
+        print_grid(tables)
 
 
 def main() -> None:

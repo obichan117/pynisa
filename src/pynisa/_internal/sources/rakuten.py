@@ -51,7 +51,9 @@ class RakutenSource(NisaSource):
 
         raw = fetch_text(url)
         df, period, updated = _parse_ranking(
-            raw, columns=cat_cfg["columns"]
+            raw,
+            columns=cat_cfg["columns"],
+            metadata_rows=self._config.get("metadata_rows", 2),
         )
 
         # Rename direction → change
@@ -64,7 +66,7 @@ class RakutenSource(NisaSource):
 
 
 def _parse_ranking(
-    raw: str, *, columns: list[str]
+    raw: str, *, columns: list[str], metadata_rows: int = 2
 ) -> tuple[pd.DataFrame, str, str]:
     """Parse Rakuten CSV ranking data (no I/O).
 
@@ -72,18 +74,18 @@ def _parse_ranking(
     """
     lines = raw.strip().split("\n")
 
-    # Extract metadata from last 2 lines
+    # Extract metadata from last N lines
     period = ""
     updated = ""
-    if len(lines) >= 2:
-        meta_lines = [line.split(",")[0].strip() for line in lines[-2:]]
+    if len(lines) >= metadata_rows:
+        meta_lines = [line.split(",")[0].strip() for line in lines[-metadata_rows:]]
         for line in meta_lines:
             if "～" in line or "〜" in line:
                 period = line
             elif "更新" in line:
                 updated = line
 
-    df = parse_csv(raw, columns=columns, skip_footer=2)
+    df = parse_csv(raw, columns=columns, skip_footer=metadata_rows)
     return df, period, updated
 
 

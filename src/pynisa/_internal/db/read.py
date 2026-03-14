@@ -15,7 +15,6 @@ def read_ranking(
     *,
     date: str | None = None,
     count: int = 10,
-    path: None = None,
 ) -> pd.DataFrame | None:
     """Read ranking from the database.
 
