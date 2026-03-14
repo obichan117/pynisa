@@ -1,0 +1,104 @@
+encoding: "shift_jis"
+
+urls:
+  stock: >-
+    https://www.sbisec.co.jp/ETGate/?_ControlID=WPLETmgR001Control
+    &_DataStoreID=DSWPLETmgR001Control
+    &_PageID=WPLETmgR001Mdtl20
+    &_ActionID=DefaultAID
+    &getFlg=on
+    &burl=iris_ranking
+    &cat1=market
+    &cat2=ranking
+    &file=index.html
+    &dir=tl1-rnk%7Ctl2-nisa%7Ctl3-stock
+    &OutSide=on
+  fund: >-
+    https://www.sbisec.co.jp/ETGate/?OutSide=on
+    &getFlg=on
+    &_ControlID=WPLETmgR001Control
+    &_PageID=WPLETmgR001Mdtl20
+    &_ActionID=DefaultAID
+    &_DataStoreID=DSWPLETmgR001Control
+    &burl=iris_ranking
+    &cat1=market
+    &cat2=ranking
+    &dir=tl1-rnk%7Ctl2-nisa%7Ctl3-fund
+    &file=index.html
+  foreign: >-
+    https://www.sbisec.co.jp/ETGate/?OutSide=on
+    &getFlg=on
+    &_ControlID=WPLETmgR001Control
+    &_PageID=WPLETmgR001Mdtl20
+    &_ActionID=DefaultAID
+    &_DataStoreID=DSWPLETmgR001Control
+    &burl=iris_ranking
+    &cat1=market
+    &cat2=ranking
+    &dir=tl1-rnk%7Ctl2-nisa%7Ctl3-foreign%7Ctl4-offrireval
+    &file=index.html
+
+categories:
+  stock_buy:
+    url_key: "stock"
+    table_index: 0
+    label: "Domestic Stocks - Purchase Amount"
+    has_ticker: true
+  stock_count:
+    url_key: "stock"
+    table_index: 1
+    label: "Domestic Stocks - Purchase Count"
+    has_ticker: true
+  stock_balance:
+    url_key: "stock"
+    table_index: 2
+    label: "Domestic Stocks - Balance"
+    has_ticker: true
+  fund_buy:
+    url_key: "fund"
+    table_index: 0
+    label: "Investment Trusts - Purchase Amount"
+    has_ticker: false
+  fund_count:
+    url_key: "fund"
+    table_index: 1
+    label: "Investment Trusts - Purchase Count"
+    has_ticker: false
+  fund_buy_count:
+    url_key: "fund"
+    table_index: 2
+    label: "Investment Trusts - Buy Count"
+    has_ticker: false
+  fund_balance:
+    url_key: "fund"
+    table_index: 3
+    label: "Investment Trusts - Balance"
+    has_ticker: false
+  us_stock_buy:
+    url_key: "foreign"
+    table_index: 0
+    label: "US Stocks - Purchase Amount"
+    has_ticker: true
+  us_etf_buy:
+    url_key: "foreign"
+    table_index: 1
+    label: "US ETFs - Purchase Amount"
+    has_ticker: true
+  cn_stock_buy:
+    url_key: "foreign"
+    table_index: 2
+    label: "Chinese/HK Stocks - Purchase Amount"
+    has_ticker: true
+  cn_etf_buy:
+    url_key: "foreign"
+    table_index: 3
+    label: "Chinese/HK ETFs - Purchase Amount"
+    has_ticker: true
+
+default_category: "stock_buy"
+
+asset_types:
+  jp: "stock_buy"
+  us: "us_stock_buy"
+  cn: "cn_stock_buy"
+  fund: "fund_buy"

@@ -1,0 +1,73 @@
+base_url: "https://www.rakuten-sec.co.jp/web/market/ranking/nisa/"
+
+categories:
+  # Domestic stocks
+  jp_stock_buy:
+    file: "JP_STK_TRD_VAL.csv"
+    label: "Domestic Stocks - Purchase Amount"
+    columns: ["rank", "direction", "ticker", "name"]
+  jp_stock_balance:
+    file: "JP_STK_BALANCE.csv"
+    label: "Domestic Stocks - Balance"
+    columns: ["rank", "direction", "ticker", "name"]
+
+  # Domestic ETF
+  jp_etf_buy:
+    file: "JP_ETF_TRD_VAL.csv"
+    label: "Domestic ETF/ETN - Purchase Amount"
+    columns: ["rank", "direction", "ticker", "name"]
+  jp_etf_balance:
+    file: "JP_ETF_BALANCE.csv"
+    label: "Domestic ETF/ETN - Balance"
+    columns: ["rank", "direction", "ticker", "name"]
+
+  # US stocks
+  us_stock_buy:
+    file: "US_STK_TRD_VAL.csv"
+    label: "US Stocks - Purchase Amount"
+    columns: ["rank", "direction", "ticker", "name", "sector"]
+  us_stock_balance:
+    file: "US_STK_BALANCE.csv"
+    label: "US Stocks - Balance"
+    columns: ["rank", "direction", "ticker", "name", "sector"]
+
+  # Chinese stocks
+  cn_stock_buy:
+    file: "CH_STK_TRD_VAL.csv"
+    label: "Chinese Stocks - Purchase Amount"
+    columns: ["rank", "direction", "ticker", "name", "sector"]
+  cn_stock_balance:
+    file: "CH_STK_BALANCE.csv"
+    label: "Chinese Stocks - Balance"
+    columns: ["rank", "direction", "ticker", "name", "sector"]
+
+  # ASEAN stocks
+  asean_stock_buy:
+    file: "ASN_STK_TRD_VAL.csv"
+    label: "ASEAN Stocks - Purchase Amount"
+    columns: ["rank", "direction", "ticker", "name", "sector"]
+  asean_stock_balance:
+    file: "ASN_STK_BALANCE.csv"
+    label: "ASEAN Stocks - Balance"
+    columns: ["rank", "direction", "ticker", "name", "sector"]
+
+  # Foreign ETFs
+  foreign_etf_buy:
+    file: "F_ETF_TRD_VAL.csv"
+    label: "Foreign ETFs - Purchase Amount"
+    columns: ["rank", "direction", "ticker", "name", "market", "detail_url"]
+  foreign_etf_balance:
+    file: "F_ETF_BALANCE.csv"
+    label: "Foreign ETFs - Balance"
+    columns: ["rank", "direction", "ticker", "name", "market", "detail_url"]
+
+default_category: "jp_stock_buy"
+metadata_rows: 2
+
+asset_types:
+  jp: "jp_stock_buy"
+  us: "us_stock_buy"
+  cn: "cn_stock_buy"
+  asean: "asean_stock_buy"
+  jp_etf: "jp_etf_buy"
+  foreign_etf: "foreign_etf_buy"
