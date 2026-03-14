@@ -26,11 +26,14 @@ def insert_rankings(
     """
     rows = []
     for _, row in df.iterrows():
+        rank_val = row.get("rank", 0)
+        if pd.isna(rank_val):
+            continue  # skip rows with no rank
         rows.append((
             source,
             category,
             date,
-            int(row.get("rank", 0)),
+            int(rank_val),
             str(row.get("change", "")),
             str(row.get("ticker", "")),
             str(row.get("name", "")),

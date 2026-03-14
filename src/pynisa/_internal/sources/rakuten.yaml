@@ -46,11 +46,11 @@ categories:
   asean_stock_buy:
     file: "ASN_STK_TRD_VAL.csv"
     label: "ASEAN Stocks - Purchase Amount"
-    columns: ["rank", "direction", "ticker", "name", "sector"]
+    columns: ["rank", "direction", "ticker", "name", "sector", "detail_url"]
   asean_stock_balance:
     file: "ASN_STK_BALANCE.csv"
     label: "ASEAN Stocks - Balance"
-    columns: ["rank", "direction", "ticker", "name", "sector"]
+    columns: ["rank", "direction", "ticker", "name", "sector", "detail_url"]
 
   # Foreign ETFs
   foreign_etf_buy:
